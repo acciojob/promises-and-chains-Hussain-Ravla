@@ -2,45 +2,44 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Voting Eligibility Form</title>
+  <title>Voting Eligibility</title>
 </head>
 <body>
-  <h2>Check if You Can Vote</h2>
-  <form id="voteForm">
-    <label for="name">Name:</label>
-    <input type="text" id="name" /><br /><br />
+  <h2>Check Voting Eligibility</h2>
 
-    <label for="age">Age:</label>
-    <input type="number" id="age" /><br /><br />
-
+  <form id="votingForm">
+    <label>Name: <input type="text" id="name" /></label><br><br>
+    <label>Age: <input type="number" id="age" /></label><br><br>
     <button type="submit" id="btn">Submit</button>
   </form>
 
   <script>
-    document.getElementById("voteForm").addEventListener("submit", function(e) {
-      e.preventDefault();
+    document.getElementById("votingForm").addEventListener("submit", function(event) {
+      event.preventDefault(); // Prevent form refresh
 
       const name = document.getElementById("name").value.trim();
-      const age = document.getElementById("age").value.trim();
+      const age = parseInt(document.getElementById("age").value);
 
-      if (!name || !age) {
+      if (!name || isNaN(age)) {
         alert("Please enter valid details.");
         return;
       }
 
-      const checkEligibility = new Promise((resolve, reject) => {
+      new Promise((resolve, reject) => {
         setTimeout(() => {
-          if (Number(age) > 18) {
-            resolve(`Welcome, ${name}. You can vote.`);
+          if (age > 18) {
+            resolve(name);
           } else {
-            reject(`Oh sorry ${name}. You aren't old enough.`);
+            reject(name);
           }
         }, 4000);
+      })
+      .then((name) => {
+        alert(`Welcome, ${name}. You can vote.`);
+      })
+      .catch((name) => {
+        alert(`Oh sorry ${name}. You aren't old enough.`);
       });
-
-      checkEligibility
-        .then(msg => alert(msg))
-        .catch(err => alert(err));
     });
   </script>
 </body>
